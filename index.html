@@ -45,18 +45,40 @@
             <!-- Use class names to group similar elements -->
             <!-- Update span IDs to be more descriptive -->
 
-            <!-- Loop for sliders -->
-            <script>
-                for (let i = 1; i <= 10; i++) {
-                    document.write(`
-                        <div class="card">
-                            <h2>Slider ${i}</h2>
-                            <label for="slider${i}">Slider ${i} Value:</label>
-                            <input type="range" id="slider${i}" min="0" max="255" step="1" value="0">
-                            <span id="slider${i}ValueDisplay">0</span>
-                        </div>
-                    `);
-                }
+ <!-- Loop for sliders -->
+<script>
+    for (let i = 1; i <= 10; i++) {
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('card');
+        
+        const h2 = document.createElement('h2');
+        h2.textContent = `Slider ${i}`;
+        cardDiv.appendChild(h2);
+        
+        const label = document.createElement('label');
+        label.setAttribute('for', `slider${i}`);
+        label.textContent = `Slider ${i} Value:`;
+        cardDiv.appendChild(label);
+        
+        const input = document.createElement('input');
+        input.setAttribute('type', 'range');
+        input.setAttribute('id', `slider${i}`);
+        input.setAttribute('min', '0');
+        input.setAttribute('max', '255');
+        input.setAttribute('step', '1');
+        input.setAttribute('value', '0');
+        cardDiv.appendChild(input);
+        
+        const span = document.createElement('span');
+        span.setAttribute('id', `slider${i}ValueDisplay`);
+        span.textContent = '0';
+        cardDiv.appendChild(span);
+        
+        // Append the constructed cardDiv to the document
+        document.querySelector('.card-grid').appendChild(cardDiv);
+    }
+</script>
+            
             </script>
 
             <!-- Color Picker -->
@@ -102,11 +124,7 @@
         writeColorCharacteristic(colorValue);
     });
 
-    // Function to write to the Color Characteristic
-    function writeColorCharacteristic(colorValue) {
-        // Your code to write the color value to the corresponding characteristic goes here
-        // Example: Use the Bluetooth API to write the color value to the BLE device
-    }
+    
 
     // Define BLE Device Specs
     var deviceName ='ESP32-web-ble';
@@ -126,6 +144,33 @@ var sliderCharacteristics = [
     '19b10003-e8f2-537e-4f6c-d104768a121c',
     '19b10004-e8f2-537e-4f6c-d104768a121d' // Color Selection Value characteristic
 ];
+
+var colorCharacteristics = [
+    '19b10004-e8f2-537e-4f6c-d104768a121e' // Color characteristic
+];
+
+// Function to write to the Color Selection Value Characteristic
+function writeColorCharacteristic(colorValue) {
+    if (bleServer && bleServer.connected) {
+        const colorCharacteristic = colorCharacteristics[0]; // Color Selection Value characteristic
+        bleServiceFound.getCharacteristic(colorCharacteristic)
+            .then(characteristic => {
+                console.log('Found the Color Selection Value characteristic: ', characteristic.uuid);
+                const data = new TextEncoder().encode(colorValue);
+                return characteristic.writeValue(data);
+            })
+            .then(() => {
+                console.log('Value written to Color Selection Value characteristic:', colorValue);
+            })
+            .catch(error => {
+                console.error('Error writing to the Color Selection Value characteristic: ', error);
+            });
+    } else {
+        console.error('Bluetooth is not connected. Cannot write to characteristic.');
+        window.alert('Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!');
+    }
+}
+
 
 // Function to write to the Slider Characteristic
 function writeSliderValueCharacteristic(sliderNumber, value){
@@ -311,49 +356,8 @@ function writeSliderValueCharacteristic(sliderNumber, value){
     }
 
 
-      // Function to write to the Slider Characteristic
-      function writeSliderValueCharacteristic(sliderNumber, value){
-        if (bleServer && bleServer.connected) {
-            const sliderCharacteristic = sliderCharacteristics[sliderNumber - 1];
-            bleServiceFound.getCharacteristic(sliderCharacteristic)
-                .then(characteristic => {
-                    console.log(`Found the Slider ${sliderNumber} characteristic: `, characteristic.uuid);
-                    const data = new Uint8Array([value]);
-                    return characteristic.writeValue(data);
-                })
-                .then(() => {
-                    latestValueSent.innerHTML = value;
-                    console.log(`Value written to Slider ${sliderNumber} characteristic:`, value);
-                })
-                .catch(error => {
-                    console.error(`Error writing to the Slider ${sliderNumber} characteristic: `, error);
-                });
-        } else {
-            console.error ("Bluetooth is not connected. Cannot write to characteristic.");
-            window.alert("Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!");
-        }
-    }
-// Function to write to the Color Selection Value Characteristic
-function writeColorCharacteristic(colorValue) {
-    if (bleServer && bleServer.connected) {
-        const colorCharacteristic = characteristics[characteristics.length - 1]; // Color Selection Value characteristic
-        bleServiceFound.getCharacteristic(colorCharacteristic)
-            .then(characteristic => {
-                console.log('Found the Color Selection Value characteristic: ', characteristic.uuid);
-                const data = new TextEncoder().encode(colorValue);
-                return characteristic.writeValue(data);
-            })
-            .then(() => {
-                console.log('Value written to Color Selection Value characteristic:', colorValue);
-            })
-            .catch(error => {
-                console.error('Error writing to the Color Selection Value characteristic: ', error);
-            });
-    } else {
-        console.error('Bluetooth is not connected. Cannot write to characteristic.');
-        window.alert('Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!');
-    }
-}
+ 
+
 
     
 </script>
