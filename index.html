@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>ESP32 Web BLE App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="UTF-8">
 </head>
+
 <body>
     <div class="topnav">
         <h1>ESP32 Web BLE Application</h1>
@@ -16,13 +17,13 @@
         <div class="card-grid">
             <div class="card">
                 <p>
-                    <button id="connectBleButton" class="connectButton"> Connect to BLE Device</button>
-                    <button id="disconnectBleButton" class="disconnectButton"> Disconnect BLE Device</button>
+                    <button id="connectBleButton" class="connectButton">Connect to BLE Device</button>
+                    <button id="disconnectBleButton" class="disconnectButton">Disconnect BLE Device</button>
                 </p>
                 <p class="gray-label">BLE state: <strong><span id="bleState" style="color:#d13a30;">Disconnected</span></strong></p>
             </div>
         </div>
-        <div class="card-grid">   
+        <div class="card-grid">
             <div class="card">
                 <h2>Fetched Value</h2>
                 <p class="reading"><span id="valueContainer">NaN</span></p>
@@ -40,81 +41,35 @@
             </div>
 
             <!-- Add 10 more sliders and corresponding characteristics -->
-            <div class="card">
-                <h2>Slider 1</h2>
-                <label for="slider1">Slider 1 Value:</label>
-                <input type="range" id="slider1" min="0" max="255" step="1" value="0">
-                <span id="slider1ValueDisplay">0</span>
-            </div>
+            <!-- Use a loop for repetitive elements -->
+            <!-- Use class names to group similar elements -->
+            <!-- Update span IDs to be more descriptive -->
 
-            <div class="card">
-                <h2>Slider 2</h2>
-                <label for="slider2">Slider 2 Value:</label>
-                <input type="range" id="slider2" min="0" max="255" step="1" value="0">
-                <span id="slider2ValueDisplay">0</span>
-            </div>
-
-            <div class="card">
-                <h2>Slider 3</h2>
-                <label for="slider3">Slider 3 Value:</label>
-                <input type="range" id="slider3" min="0" max="255" step="1" value="0">
-                <span id="slider3ValueDisplay">0</span>
-            </div>
-
-            <div class="card">
-                <h2>Slider 4</h2>
-                <label for="slider4">Slider 4 Value:</label>
-                <input type="range" id="slider4" min="0" max="255" step="1" value="0">
-                <span id="slider4ValueDisplay">0</span>
-            </div>
-
-            <div class="card">
-                <h2>Slider 5</h2>
-                <label for="slider5">Slider 5 Value:</label>
-                <input type="range" id="slider5" min="0" max="255" step="1" value="0">
-                <span id="slider5ValueDisplay">0</span>
-            </div>
-
-            <div class="card">
-                <h2>Slider 6</h2>
-                <label for="slider6">Slider 6 Value:</label>
-                <input type="range" id="slider6" min="0" max="255" step="1" value="0">
-                <span id="slider6ValueDisplay">0</span>
-            </div>
-
-            <div class="card">
-                <h2>Slider 7</h2>
-                <label for="slider7">Slider 7 Value:</label>
-                <input type="range" id="slider7" min="0" max="255" step="1" value="0">
-                <span id="slider7ValueDisplay">0</span>
-            </div>
-
-            <div class="card">
-                <h2>Slider 8</h2>
-                <label for="slider8">Slider 8 Value:</label>
-                <input type="range" id="slider8" min="0" max="255" step="1" value="0">
-                <span id="slider8ValueDisplay">0</span>
-            </div>
-
-            <div class="card">
-                <h2>Slider 9</h2>
-                <label for="slider9">Slider 9 Value:</label>
-                <input type="range" id="slider9" min="0" max="255" step="1" value="0">
-                <span id="slider9ValueDisplay">0</span>
-            </div>
-
-            <div class="card">
-                <h2>Slider 10</h2>
-                <label for="slider10">Slider 10 Value:</label>
-                <input type="range" id="slider10" min="0" max="255" step="1" value="0">
-                <span id="slider10ValueDisplay">0</span>
-            </div>
+            <!-- Loop for sliders -->
+            <script>
+                for (let i = 1; i <= 10; i++) {
+                    document.write(`
+                        <div class="card">
+                            <h2>Slider ${i}</h2>
+                            <label for="slider${i}">Slider ${i} Value:</label>
+                            <input type="range" id="slider${i}" min="0" max="255" step="1" value="0">
+                            <span id="slider${i}ValueDisplay">0</span>
+                        </div>
+                    `);
+                }
+            </script>
 
             <!-- Color Picker -->
             <div class="card">
                 <h2>Color Picker</h2>
                 <input type="color" id="colorPicker" value="#000000">
                 <p class="gray-label">Last color sent: <span id="colorSent"></span></p>
+            </div>
+
+            <!-- Color Selection Value -->
+            <div class="card">
+                <h2>Color Selection Value</h2>
+                <span id="colorSelectionValue">0</span>
             </div>
         </div>
     </div>
@@ -123,6 +78,7 @@
         <p><a href="https://psychmatters.co.nz/">Stefan was here.</a></p>
     </div>
 </body>
+
 <script>
     // DOM Elements
     const connectButton = document.getElementById('connectBleButton');
@@ -151,26 +107,49 @@
         // Your code to write the color value to the corresponding characteristic goes here
         // Example: Use the Bluetooth API to write the color value to the BLE device
     }
-    
+
     // Define BLE Device Specs
     var deviceName ='ESP32-web-ble';
     var bleService = '19b10000-e8f2-537e-4f6c-d104768a1214';
     var ledCharacteristic = '19b10002-e8f2-537e-4f6c-d104768a1214';
     var sensorCharacteristic = '19b10001-e8f2-537e-4f6c-d104768a1214';
     
-    // Static allocation of Slider Characteristics
-    var sliderCharacteristics = [
-        '19b10003-e8f2-537e-4f6c-d104768a1213',
-        '19b10003-e8f2-537e-4f6c-d104768a1214',
-        '19b10003-e8f2-537e-4f6c-d104768a1215',
-        '19b10003-e8f2-537e-4f6c-d104768a1216',
-        '19b10003-e8f2-537e-4f6c-d104768a1217',
-        '19b10003-e8f2-537e-4f6c-d104768a1218',
-        '19b10003-e8f2-537e-4f6c-d104768a1219',
-        '19b10003-e8f2-537e-4f6c-d104768a121a',
-        '19b10003-e8f2-537e-4f6c-d104768a121b',
-        '19b10003-e8f2-537e-4f6c-d104768a121c'
-    ];
+// Static allocation of Slider Characteristics and Color Selection Value characteristic
+var sliderCharacteristics = [
+    '19b10003-e8f2-537e-4f6c-d104768a1215',
+    '19b10003-e8f2-537e-4f6c-d104768a1216',
+    '19b10003-e8f2-537e-4f6c-d104768a1217',
+    '19b10003-e8f2-537e-4f6c-d104768a1218',
+    '19b10003-e8f2-537e-4f6c-d104768a1219',
+    '19b10003-e8f2-537e-4f6c-d104768a121a',
+    '19b10003-e8f2-537e-4f6c-d104768a121b',
+    '19b10003-e8f2-537e-4f6c-d104768a121c',
+    '19b10004-e8f2-537e-4f6c-d104768a121d' // Color Selection Value characteristic
+];
+
+// Function to write to the Slider Characteristic
+function writeSliderValueCharacteristic(sliderNumber, value){
+    if (bleServer && bleServer.connected) {
+        const sliderCharacteristic = sliderCharacteristics[sliderNumber - 1];
+        bleServiceFound.getCharacteristic(sliderCharacteristic)
+            .then(characteristic => {
+                console.log(`Found the Slider ${sliderNumber} characteristic: `, characteristic.uuid);
+                const data = new Uint8Array([value]);
+                return characteristic.writeValue(data);
+            })
+            .then(() => {
+                latestValueSent.innerHTML = value;
+                console.log(`Value written to Slider ${sliderNumber} characteristic:`, value);
+            })
+            .catch(error => {
+                console.error(`Error writing to the Slider ${sliderNumber} characteristic: `, error);
+            });
+    } else {
+        console.error ("Bluetooth is not connected. Cannot write to characteristic.");
+        window.alert("Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!");
+    }
+}
+
 
     // Global Variables to Handle Bluetooth
     var bleServer;
@@ -211,15 +190,6 @@
         return true;
     }
 
-    function isWebBluetoothEnabled() {
-        if (!navigator.bluetooth) {
-            console.log('Web Bluetooth API is not available in this browser!');
-            bleStateContainer.innerHTML = "Web Bluetooth API is not available in this browser/device!";
-            return false;
-        }
-        console.log('Web Bluetooth API supported in this browser.');
-        return true;
-    }
 
     // Connect to BLE Device and Enable Notifications
     function connectToDevice(){
@@ -363,6 +333,27 @@
             window.alert("Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!");
         }
     }
+// Function to write to the Color Selection Value Characteristic
+function writeColorCharacteristic(colorValue) {
+    if (bleServer && bleServer.connected) {
+        const colorCharacteristic = characteristics[characteristics.length - 1]; // Color Selection Value characteristic
+        bleServiceFound.getCharacteristic(colorCharacteristic)
+            .then(characteristic => {
+                console.log('Found the Color Selection Value characteristic: ', characteristic.uuid);
+                const data = new TextEncoder().encode(colorValue);
+                return characteristic.writeValue(data);
+            })
+            .then(() => {
+                console.log('Value written to Color Selection Value characteristic:', colorValue);
+            })
+            .catch(error => {
+                console.error('Error writing to the Color Selection Value characteristic: ', error);
+            });
+    } else {
+        console.error('Bluetooth is not connected. Cannot write to characteristic.');
+        window.alert('Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!');
+    }
+}
 
     
 </script>
