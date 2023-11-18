@@ -30,6 +30,8 @@
 
             <div class="card">
                 <h2>Control GPIO 2</h2>
+                <label for="gpioSlider">GPIO 2 Value:</label>
+                <input type="range" id="gpioSlider" min="0" max="255" step="1" value="0">
                 <button id="onButton" class="onButton">ON</button>
                 <button id="offButton" class="offButton">OFF</button>
                 <p class="gray-label">Last value sent: <span id="valueSent"></span></p>
@@ -37,8 +39,8 @@
         </div>
     </div>
     <div class="footer">
-        <p><a href="https://psychmatters.co.nz/">Created by RNT but used by stefan</a></p>
-        <p><a href="https://psychmatters.co.nz/">Visit me here.</a></p>
+        <p><a href="https://randomnerdtutorials.com/">Created by RandomNerdTutorials.com</a></p>
+        <p><a href="https://RandomNerdTutorials.com/esp32-web-bluetooth/">Read the full project here.</a></p>
     </div>
 </body>
 <script>
@@ -47,6 +49,7 @@
     const disconnectButton = document.getElementById('disconnectBleButton');
     const onButton = document.getElementById('onButton');
     const offButton = document.getElementById('offButton');
+    const gpioSlider = document.getElementById('gpioSlider');
     const retrievedValue = document.getElementById('valueContainer');
     const latestValueSent = document.getElementById('valueSent');
     const bleStateContainer = document.getElementById('bleState');
@@ -77,17 +80,25 @@
     onButton.addEventListener('click', () => writeOnCharacteristic(1));
     offButton.addEventListener('click', () => writeOnCharacteristic(0));
 
+    // Slider Input Event Listener
+    gpioSlider.addEventListener('input', () => {
+        const sliderValue = gpioSlider.value;
+        console.log('Slider Value:', sliderValue);
+        // You can perform additional actions with the slider value if needed.
+    });
+
     // Check if BLE is available in your Browser
     function isWebBluetoothEnabled() {
         if (!navigator.bluetooth) {
             console.log('Web Bluetooth API is not available in this browser!');
             bleStateContainer.innerHTML = "Web Bluetooth API is not available in this browser/device!";
-            return false
+            return false;
         }
         console.log('Web Bluetooth API supported in this browser.');
-        return true
+        return true;
     }
 
+    // ... (Your existing script) ...
     // Connect to BLE Device and Enable Notifications
     function connectToDevice(){
         console.log('Initializing Bluetooth...');
@@ -197,7 +208,7 @@
 
     function getDateTime() {
         var currentdate = new Date();
-        var day = ("00" + currentdate.getDate()).slice(-2); // Convert day to string and slice
+        var day = ("00" + currentdate.getDate()).slice(-2); 
         var month = ("00" + (currentdate.getMonth() + 1)).slice(-2);
         var year = currentdate.getFullYear();
         var hours = ("00" + currentdate.getHours()).slice(-2);
@@ -207,8 +218,5 @@
         var datetime = day + "/" + month + "/" + year + " at " + hours + ":" + minutes + ":" + seconds;
         return datetime;
     }
-
-
 </script>
-
 </html>
