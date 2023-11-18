@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,11 +38,89 @@
                 <button id="offButton" class="offButton">OFF</button>
                 <p class="gray-label">Last value sent: <span id="valueSent"></span></p>
             </div>
+
+            <!-- Add 10 more sliders and corresponding characteristics -->
+            <div class="card">
+                <h2>Slider 1</h2>
+                <label for="slider1">Slider 1 Value:</label>
+                <input type="range" id="slider1" min="0" max="255" step="1" value="0">
+                <span id="slider1ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 2</h2>
+                <label for="slider2">Slider 2 Value:</label>
+                <input type="range" id="slider2" min="0" max="255" step="1" value="0">
+                <span id="slider2ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 3</h2>
+                <label for="slider3">Slider 3 Value:</label>
+                <input type="range" id="slider3" min="0" max="255" step="1" value="0">
+                <span id="slider3ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 4</h2>
+                <label for="slider4">Slider 4 Value:</label>
+                <input type="range" id="slider4" min="0" max="255" step="1" value="0">
+                <span id="slider4ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 5</h2>
+                <label for="slider5">Slider 5 Value:</label>
+                <input type="range" id="slider5" min="0" max="255" step="1" value="0">
+                <span id="slider5ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 6</h2>
+                <label for="slider6">Slider 6 Value:</label>
+                <input type="range" id="slider6" min="0" max="255" step="1" value="0">
+                <span id="slider6ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 7</h2>
+                <label for="slider7">Slider 7 Value:</label>
+                <input type="range" id="slider7" min="0" max="255" step="1" value="0">
+                <span id="slider7ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 8</h2>
+                <label for="slider8">Slider 8 Value:</label>
+                <input type="range" id="slider8" min="0" max="255" step="1" value="0">
+                <span id="slider8ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 9</h2>
+                <label for="slider9">Slider 9 Value:</label>
+                <input type="range" id="slider9" min="0" max="255" step="1" value="0">
+                <span id="slider9ValueDisplay">0</span>
+            </div>
+
+            <div class="card">
+                <h2>Slider 10</h2>
+                <label for="slider10">Slider 10 Value:</label>
+                <input type="range" id="slider10" min="0" max="255" step="1" value="0">
+                <span id="slider10ValueDisplay">0</span>
+            </div>
+
+            <!-- Color Picker -->
+            <div class="card">
+                <h2>Color Picker</h2>
+                <input type="color" id="colorPicker" value="#000000">
+                <p class="gray-label">Last color sent: <span id="colorSent"></span></p>
+            </div>
         </div>
     </div>
     <div class="footer">
-        <p><a href="https://randomnerdtutorials.com/">Created by RandomNerdTutorials.com</a></p>
-        <p><a href="https://RandomNerdTutorials.com/esp32-web-bluetooth/">Read the full project here.</a></p>
+        <p><a href="https://psychmatters.co.nz/">Created by</a></p>
+        <p><a href="https://psychmatters.co.nz/">Stefan was here.</a></p>
     </div>
 </body>
 <script>
@@ -56,15 +135,44 @@
     const latestValueSent = document.getElementById('valueSent');
     const bleStateContainer = document.getElementById('bleState');
     const timestampContainer = document.getElementById('timestamp');
+    const colorPicker = document.getElementById('colorPicker');
+    const colorSentContainer = document.getElementById('colorSent');
 
-    //Define BLE Device Specs
+    // Color Picker Input Event Listener
+    colorPicker.addEventListener('input', () => {
+        const colorValue = colorPicker.value.substring(1); // Remove the '#' character
+        console.log('Color Value:', colorValue);
+        colorSentContainer.textContent = colorValue; // Update the display with the current color value
+        writeColorCharacteristic(colorValue);
+    });
+
+    // Function to write to the Color Characteristic
+    function writeColorCharacteristic(colorValue) {
+        // Your code to write the color value to the corresponding characteristic goes here
+        // Example: Use the Bluetooth API to write the color value to the BLE device
+    }
+    
+    // Define BLE Device Specs
     var deviceName ='ESP32-web-ble';
     var bleService = '19b10000-e8f2-537e-4f6c-d104768a1214';
     var ledCharacteristic = '19b10002-e8f2-537e-4f6c-d104768a1214';
     var sensorCharacteristic = '19b10001-e8f2-537e-4f6c-d104768a1214';
-    var sliderCharacteristic = '19b10003-e8f2-537e-4f6c-d104768a1214'; // Replace with your UUID
+    
+    // Static allocation of Slider Characteristics
+    var sliderCharacteristics = [
+        '19b10003-e8f2-537e-4f6c-d104768a1213',
+        '19b10003-e8f2-537e-4f6c-d104768a1214',
+        '19b10003-e8f2-537e-4f6c-d104768a1215',
+        '19b10003-e8f2-537e-4f6c-d104768a1216',
+        '19b10003-e8f2-537e-4f6c-d104768a1217',
+        '19b10003-e8f2-537e-4f6c-d104768a1218',
+        '19b10003-e8f2-537e-4f6c-d104768a1219',
+        '19b10003-e8f2-537e-4f6c-d104768a121a',
+        '19b10003-e8f2-537e-4f6c-d104768a121b',
+        '19b10003-e8f2-537e-4f6c-d104768a121c'
+    ];
 
-    //Global Variables to Handle Bluetooth
+    // Global Variables to Handle Bluetooth
     var bleServer;
     var bleServiceFound;
     var sensorCharacteristicFound;
@@ -233,25 +341,29 @@
     }
 
 
-    function writeSliderValueCharacteristic(value){
+      // Function to write to the Slider Characteristic
+      function writeSliderValueCharacteristic(sliderNumber, value){
         if (bleServer && bleServer.connected) {
+            const sliderCharacteristic = sliderCharacteristics[sliderNumber - 1];
             bleServiceFound.getCharacteristic(sliderCharacteristic)
-            .then(characteristic => {
-                console.log("Found the Slider characteristic: ", characteristic.uuid);
-                const data = new Uint8Array([value]);
-                return characteristic.writeValue(data);
-            })
-            .then(() => {
-                latestValueSent.innerHTML = value;
-                console.log("Value written to Slider characteristic:", value);
-            })
-            .catch(error => {
-                console.error("Error writing to the Slider characteristic: ", error);
-            });
+                .then(characteristic => {
+                    console.log(`Found the Slider ${sliderNumber} characteristic: `, characteristic.uuid);
+                    const data = new Uint8Array([value]);
+                    return characteristic.writeValue(data);
+                })
+                .then(() => {
+                    latestValueSent.innerHTML = value;
+                    console.log(`Value written to Slider ${sliderNumber} characteristic:`, value);
+                })
+                .catch(error => {
+                    console.error(`Error writing to the Slider ${sliderNumber} characteristic: `, error);
+                });
         } else {
-            console.error ("Bluetooth is not connected. Cannot write to characteristic.")
-            window.alert("Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!")
+            console.error ("Bluetooth is not connected. Cannot write to characteristic.");
+            window.alert("Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!");
         }
     }
+
+    
 </script>
 </html>
